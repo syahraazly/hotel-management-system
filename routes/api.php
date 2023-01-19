@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\TypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+use function PHPSTORM_META\type;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +20,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//CRUD room_type
+Route::get('/types',[TypeController::class,'rooms']);
+Route::get('/type/{id}',[TypeController::class,'room']);
+Route::post('/createtype',[TypeController::class,'store']);
+Route::delete('/deletetype/{id}',[TypeController::class,'destroy']);
+Route::put('/updatetype/{id}', [TypeController::class,'update']);

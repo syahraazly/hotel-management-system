@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Type;
 use Illuminate\Http\Request;
 
 class TypeController extends Controller
@@ -11,9 +12,21 @@ class TypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function types()
     {
-        //
+       
+
+        return response()->json([
+            'data' => Type::all()
+        ]);
+    }
+    public function type($id)
+    {
+       
+
+        return response()->json([
+            'data' => Type::find($id)
+        ]);
     }
 
     /**
@@ -34,7 +47,21 @@ class TypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $this->validate($request,[
+            'type_name' => 'required',
+            'price' => 'required',
+            'desc' => 'required',
+            'photo' => 'required',
+        ]);
+
+        Type::create([
+            'type_name' => $request->type_name,
+            'price' => $request->price,
+            'desc' => $request->desc,
+            'photo' => $request->photo,
+        ]);
+
     }
 
     /**
@@ -68,7 +95,19 @@ class TypeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,[
+            'type_name' => 'required',
+            'price' => 'required',
+            'desc' => 'required',
+            'photo' => 'required',
+        ]);
+
+        $roomtype = Type::find($id);
+        $roomtype->type_name = $request->type_name; 
+        $roomtype->price = $request->price; 
+        $roomtype->desc = $request->desc; 
+        $roomtype->photo = $request->photo;
+        $roomtype->update(); 
     }
 
     /**
@@ -79,6 +118,7 @@ class TypeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = Type::find($id);
+        $data->delete();
     }
 }
