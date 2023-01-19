@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('room_number');
             $table->integer('room_type');
             $table->timestamps();
-
             $table->foreign('type_id')->references('type_id')->on('type');
         });
     }
