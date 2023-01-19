@@ -60,8 +60,9 @@ class TypeController extends Controller
             'price' => $request->price,
             'desc' => $request->desc,
             'photo' => $request->photo,
+            'photo' => $request->photo,
         ]);
-//Test Branch
+
     }
 
     /**
