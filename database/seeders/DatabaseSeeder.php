@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
-use App\Models\tipeKamar;
 use App\Models\User;
 use App\Models\Type;
 use Illuminate\Database\Seeder;
