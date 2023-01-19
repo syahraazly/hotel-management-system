@@ -61,7 +61,7 @@ class TypeController extends Controller
             'desc' => $request->desc,
             'photo' => $request->photo,
         ]);
-
+//Test Branch
     }
 
     /**
