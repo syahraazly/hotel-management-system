@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Type;
 use Illuminate\Http\Request;
 
+use function PHPSTORM_META\type;
+
 class TypeController extends Controller
 {
     /**
@@ -15,7 +17,6 @@ class TypeController extends Controller
     public function types()
     {
        
-
         return response()->json([
             'data' => Type::all()
         ]);
@@ -60,7 +61,6 @@ class TypeController extends Controller
             'price' => $request->price,
             'desc' => $request->desc,
             'photo' => $request->photo,
-            'photo' => $request->photo,
         ]);
 
     }
@@ -103,12 +103,15 @@ class TypeController extends Controller
             'photo' => 'required',
         ]);
 
-        $roomtype = Type::find($id);
-        $roomtype->type_name = $request->type_name; 
-        $roomtype->price = $request->price; 
-        $roomtype->desc = $request->desc; 
-        $roomtype->photo = $request->photo;
-        $roomtype->update(); 
+
+        Type::where('type_id',$id)->update([
+            'type_name'    =>$request->type_name,
+            'price'    =>$request->price,
+            'desc'    =>$request->desc,
+            'photo'    =>$request->photo,
+        ]);
+
+         
     }
 
     /**
