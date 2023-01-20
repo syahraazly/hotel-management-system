@@ -22,8 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 //CRUD room_type
-Route::get('/types',[TypeController::class,'rooms']);
-Route::get('/type/{id}',[TypeController::class,'room']);
+Route::get('/types',[TypeController::class,'types']);
+Route::get('/type/{id}',[TypeController::class,'type']);
 Route::post('/createtype',[TypeController::class,'store']);
 Route::delete('/deletetype/{id}',[TypeController::class,'destroy']);
 Route::put('/updatetype/{id}', [TypeController::class,'update']);
