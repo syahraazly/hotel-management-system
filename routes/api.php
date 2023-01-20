@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\TypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,9 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//CRUD room_type
+//CRUD type
 Route::get('/type',[TypeController::class,'show']);
 Route::get('/type/{id}',[TypeController::class,'detail']);
 Route::post('/type',[TypeController::class,'store']);
 Route::delete('/type/{id}',[TypeController::class,'destroy']);
 Route::put('/type/{id}', [TypeController::class,'update']);
+
+// CRUD room
+Route::post('/room',[RoomController::class,'store']);

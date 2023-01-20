@@ -11,6 +11,10 @@ class Rooms extends Model
     protected $table = 'rooms';
     protected $primaryKey = 'room_id';
     public $fillable = [
-        'room_number', 'room_type'
+        'room_number', 'room_type', 'status'
     ];
+
+    public function Type(){
+        return $this->belongsTo(Type::class, 'type_id');
+    }
 }

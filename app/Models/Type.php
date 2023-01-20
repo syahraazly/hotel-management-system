@@ -13,4 +13,8 @@ class Type extends Model
     public $fillable = [
         'type_name', 'price', 'desc', 'photo'
     ];
+
+    public function Room(){
+        return $this->hasMany(Room::class, 'type_id');
+    }
 }

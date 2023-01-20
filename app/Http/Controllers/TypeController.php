@@ -48,7 +48,8 @@ class TypeController extends Controller
             'photo' => $request->photo,
         ]);
         return response()->json([
-            'message' => 'Success!!'
+            'message' => 'Success!!',
+            'data' => Type::all()
         ]);
     }
 

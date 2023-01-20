@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('type_id');
             $table->integer('room_number');
             $table->integer('room_type');
+            $table->enum('status', ['available', 'not available']);
             $table->timestamps();
             $table->foreign('type_id')->references('type_id')->on('type');
         });
