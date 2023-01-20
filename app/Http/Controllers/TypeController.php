@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Type;
 use Illuminate\Http\Request;
-
 use function PHPSTORM_META\type;
+
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class TypeController extends Controller
 {
@@ -21,6 +23,7 @@ class TypeController extends Controller
             'data' => Type::all()
         ]);
     }
+
     public function detail($id)
     {
         return response()->json([
@@ -28,22 +31,6 @@ class TypeController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         
@@ -60,28 +47,11 @@ class TypeController extends Controller
             'desc' => $request->desc,
             'photo' => $request->photo,
         ]);
-
+        return response()->json([
+            'message' => 'Success!!'
+        ]);
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $this->validate($request,[
@@ -91,7 +61,6 @@ class TypeController extends Controller
             'photo' => 'required',
         ]);
 
-
         Type::where('type_id',$id)->update([
             'type_name'    =>$request->type_name,
             'price'    =>$request->price,
@@ -99,18 +68,19 @@ class TypeController extends Controller
             'photo'    =>$request->photo,
         ]);
 
-        $this->save();
+        return response()->json([
+            'message' => 'Success Update Data!',
+            'data' => Type::find($id)
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $data = Type::find($id);
         $data->delete();
+
+        return response()->json([
+            'message' => 'Success Delete Data!',
+        ]);
     }
 }
