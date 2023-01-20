@@ -14,17 +14,15 @@ class TypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function types()
+    public function show()
     {
        
         return response()->json([
             'data' => Type::all()
         ]);
     }
-    public function type($id)
+    public function detail($id)
     {
-       
-
         return response()->json([
             'data' => Type::find($id)
         ]);
@@ -65,16 +63,6 @@ class TypeController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -111,7 +99,7 @@ class TypeController extends Controller
             'photo'    =>$request->photo,
         ]);
 
-         
+        $this->save();
     }
 
     /**
