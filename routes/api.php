@@ -30,4 +30,7 @@ Route::delete('/type/{id}',[TypeController::class,'destroy']);
 Route::put('/type/{id}', [TypeController::class,'update']);
 
 // CRUD room
+Route::get('/room/{id}',[RoomController::class,'detail']); //
 Route::post('/room',[RoomController::class,'store']);
+Route::delete('/room/{id}',[RoomController::class,'destroy']);
+Route::put('/room/{id}', [RoomController::class,'update']);

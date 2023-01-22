@@ -72,8 +72,12 @@ class TypeController extends Controller
             'photo' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
         $photo_name = $request->file('photo')->getClientOriginalName();
- 
-        $photo_path = $request->file('photo')->store('public/images');
+        $photo_path = $request->file('photo')->store('images');
+
+        $location = 'images';
+
+        $file = $request->file('photo');
+        $file->move($location,$photo_name);
 
         Type::where('type_id',$id)->update([
             'type_name'    =>$request->type_name,
@@ -94,7 +98,7 @@ class TypeController extends Controller
 
     public function destroy($id)
     {
-        $data = Type::find($id);
+        $data = Type::find('type_id',$id);
         $data->delete();
 
         return response()->json([
