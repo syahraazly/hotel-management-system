@@ -15,12 +15,10 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->bigIncrements('room_id');
-            $table->unsignedBigInteger('type_id');
             $table->integer('room_number');
-            $table->integer('room_type');
+            $table->integer('type_id')->nullable();
             $table->enum('status', ['available', 'not available']);
             $table->timestamps();
-            $table->foreign('type_id')->references('type_id')->on('type');
         });
     }
 

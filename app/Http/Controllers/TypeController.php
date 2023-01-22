@@ -38,14 +38,24 @@ class TypeController extends Controller
             'type_name' => 'required',
             'price' => 'required',
             'desc' => 'required',
-            'photo' => 'required',
+            'photo' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
+        $photo_name = $request->file('photo')->getClientOriginalName();
+ 
+        $photo_path = $request->file('photo')->store('images');
+
+        $location = 'images';
+
+        $file = $request->file('photo');
+        $file->move($location,$photo_name);
+
 
         Type::create([
             'type_name' => $request->type_name,
             'price' => $request->price,
             'desc' => $request->desc,
-            'photo' => $request->photo,
+            'photo_name'    =>$photo_name,
+            'photo_path'    =>$photo_path,
         ]);
         return response()->json([
             'message' => 'Success!!',
@@ -59,15 +69,22 @@ class TypeController extends Controller
             'type_name' => 'required',
             'price' => 'required',
             'desc' => 'required',
-            'photo' => 'required',
+            'photo' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
+        $photo_name = $request->file('photo')->getClientOriginalName();
+ 
+        $photo_path = $request->file('photo')->store('public/images');
 
         Type::where('type_id',$id)->update([
             'type_name'    =>$request->type_name,
             'price'    =>$request->price,
             'desc'    =>$request->desc,
-            'photo'    =>$request->photo,
+            'photo_name'    =>$photo_name,
+            'photo_path'    =>$photo_path,
         ]);
+        
+ 
+ 
 
         return response()->json([
             'message' => 'Success Update Data!',

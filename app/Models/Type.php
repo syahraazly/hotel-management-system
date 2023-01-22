@@ -11,10 +11,10 @@ class Type extends Model
     protected $table = 'type';
     protected $primaryKey = 'type_id';
     public $fillable = [
-        'type_name', 'price', 'desc', 'photo'
+       'price', 'desc', 'photo_name','photo_path','type_name'
     ];
 
-    public function Room(){
-        return $this->hasMany(Room::class, 'type_id');
+    public function Type(){
+        return $this->hasMany(Room::class, 'room_id');
     }
 }

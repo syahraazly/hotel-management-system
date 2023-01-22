@@ -55,19 +55,19 @@ class DatabaseSeeder extends Seeder
                 'type_name' => 'standart',
                 'price' => '250000',
                 'desc' => 'include bed, television, and private bathroom',
-                'photo' => 'standart.jpg',
+          
             ],
             [
                 'type_name' => 'suite',
                 'price' => '550000',
                 'desc' => 'include bed, television, private bathroom, living area, and kitchen',
-                'photo' => 'suite.jpg',
+              
             ],
             [
                 'type_name' => 'presidential',
                 'price' => '755000',
                 'desc' => 'include bed, television, private bathroom, living area, kitchen, and private balcony',
-                'photo' => 'presedential.jpg',
+            
             ]
         ];
         foreach ($types as $key => $type){

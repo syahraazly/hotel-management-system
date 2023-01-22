@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('type', function (Blueprint $table) {
             $table->bigIncrements('type_id');
             $table->string('type_name');
-            $table->integer('price');
-            $table->string('desc');
-            $table->string('photo');
+            $table->Biginteger('price');
+            $table->Text('desc');
+            $table->string('photo_name')->nullable();
+            $table->string('photo_path')->nullable();
             $table->timestamps();
         });
     }
