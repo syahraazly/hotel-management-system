@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\RoomController;
-use App\Http\Controllers\TypeController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
 use function PHPSTORM_META\type;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoomController;
+
+use App\Http\Controllers\TypeController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,7 @@ Route::get('/room/{id}',[RoomController::class,'detail']); //
 Route::post('/room',[RoomController::class,'store']);
 Route::delete('/room/{id}',[RoomController::class,'destroy']);
 Route::put('/room/{id}', [RoomController::class,'update']);
+
+//Orders
+Route::put('/orders', [OrderController::class,'index']);
+Route::put('/order/{id}', [OrderController::class,'store']);

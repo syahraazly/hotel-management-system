@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pemesanan;
+use App\Models\Order;
+use Illuminate\Http\Request;
 use App\Http\Requests\StorePemesananRequest;
 use App\Http\Requests\UpdatePemesananRequest;
 
-class PemesananController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,9 +35,11 @@ class PemesananController extends Controller
      * @param  \App\Http\Requests\StorePemesananRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePemesananRequest $request)
+    public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+            
+        ]);
     }
 
     /**
@@ -45,7 +48,7 @@ class PemesananController extends Controller
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Http\Response
      */
-    public function show(Pemesanan $pemesanan)
+    public function show(Request $pemesanan)
     {
         //
     }
@@ -56,7 +59,7 @@ class PemesananController extends Controller
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Http\Response
      */
-    public function edit(Pemesanan $pemesanan)
+    public function edit(Request $pemesanan)
     {
         //
     }
@@ -68,7 +71,7 @@ class PemesananController extends Controller
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePemesananRequest $request, Pemesanan $pemesanan)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -79,7 +82,7 @@ class PemesananController extends Controller
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pemesanan $pemesanan)
+    public function destroy(Request $pemesanan)
     {
         //
     }

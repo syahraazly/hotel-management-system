@@ -72,6 +72,7 @@ class TypeController extends Controller
             'photo' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
         $photo_name = $request->file('photo')->getClientOriginalName();
+ 
         $photo_path = $request->file('photo')->store('images');
 
         $location = 'images';
@@ -86,9 +87,6 @@ class TypeController extends Controller
             'photo_name'    =>$photo_name,
             'photo_path'    =>$photo_path,
         ]);
-        
- 
- 
 
         return response()->json([
             'message' => 'Success Update Data!',
