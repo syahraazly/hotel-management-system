@@ -11,7 +11,7 @@ class Order extends Model
     protected $primaryKey = 'order_id';
     public $fillable = [
         'order_number', 
-        'customer',
+        'customer_name',
         'customer_email',
         'order_date',
         'check_in',
@@ -19,5 +19,6 @@ class Order extends Model
         'guest_name',
         'type_id',
         'user_id',
+        'rooms_amount',
     ];
 }

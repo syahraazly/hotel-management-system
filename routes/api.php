@@ -37,5 +37,5 @@ Route::delete('/room/{id}',[RoomController::class,'destroy']);
 Route::put('/room/{id}', [RoomController::class,'update']);
 
 //Orders
-Route::put('/orders', [OrderController::class,'index']);
+Route::post('/orders', [OrderController::class,'index']); //bikin order
 Route::put('/order/{id}', [OrderController::class,'store']);

@@ -25,7 +25,7 @@ class TypeController extends Controller
     }
 
     public function detail($id)
-    {
+    {       
         return response()->json([
             'data' => Type::find($id)
         ]);

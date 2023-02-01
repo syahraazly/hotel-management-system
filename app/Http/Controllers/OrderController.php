@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePemesananRequest;
 use App\Http\Requests\UpdatePemesananRequest;
 
@@ -14,9 +15,41 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $this->validate($request,[
+            'customer_name' => 'required',
+            'customer_email' => 'required|email',
+            'check_in' => 'required',
+            'check_out' => 'required',
+            'guest_name' => 'required',
+            'rooms_amount' => 'required',
+            'type_id' => 'required',
+        ]);
+        $customer_name = $request->customer_name;
+        $type_id = $request->type_id;
+        $hash = strlen($customer_name);
+        $order_number = $type_id * $hash;
+
+        $rooms_amount = DB::table('type')->count();
+       
+
+        Order::create([
+            'order_number' => $order_number,
+            'customer_name' =>$request->customer_name ,
+            'customer_email'=>$request->customer_email,
+            'check_in' =>$request->check_in,
+            'check_out' =>$request->check_out,
+            'guest_name' =>$request->guest_name,
+            'rooms_amount' =>$request->rooms_amount,
+            'type_id' =>$request->type_id,
+        ]);
+
+        return response()->json([
+            'message' => 'Success!!',
+            'data' => Order::all(),
+            $rooms_amount
+        ]);
     }
 
     /**
@@ -26,7 +59,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
