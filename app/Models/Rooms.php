@@ -11,7 +11,7 @@ class Rooms extends Model
     protected $table = 'rooms';
     protected $primaryKey = 'room_id';
     public $fillable = [
-        'room_number', 'status','type_id'
+        'room_number', 'type_id'
     ];
 
     public function Rooms(){

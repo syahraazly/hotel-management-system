@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rooms;
 use App\Models\Type;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use function PHPSTORM_META\type;
 
@@ -29,6 +31,14 @@ class TypeController extends Controller
         return response()->json([
             'data' => Type::find($id)
         ]);
+    }
+
+    public function detailType($type_id){
+        $room = Rooms::join('type', 'rooms.type_id', '=', 'type.type_id')
+                ->select('rooms.*', 'type.type_name')
+                ->where('rooms.type_id', $type_id)
+                ->get();
+        return $room;
     }
 
     public function store(Request $request)
@@ -65,20 +75,29 @@ class TypeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request,[
+        
+        $request->validate([
             'type_name' => 'required',
             'price' => 'required',
             'desc' => 'required',
-            'photo' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
-        $photo_name = $request->file('photo')->getClientOriginalName();
- 
-        $photo_path = $request->file('photo')->store('images');
 
-        $location = 'images';
+        
+        if ($request->hasFile('photo')) {
+            $photo_name = $request->file('photo')->getClientOriginalName();
+            $photo_path = $request->file('photo')->store('images');
+        }
 
-        $file = $request->file('photo');
-        $file->move($location,$photo_name);
+        $updateData = [
+            'type_name'     => $request->type_name,
+            'price'         => $request->price,
+            'desc'          => $request->desc,
+        ];
+
+        if ($request->hasFile('photo')) {
+            $updateData['photo_name'] = $photo_name;
+            $updateData['photo_path'] = $photo_path;
+        }
 
         Type::where('type_id',$id)->update([
             'type_name'    =>$request->type_name,
@@ -87,6 +106,9 @@ class TypeController extends Controller
             'photo_name'    =>$photo_name,
             'photo_path'    =>$photo_path,
         ]);
+        
+ 
+ 
 
         return response()->json([
             'message' => 'Success Update Data!',

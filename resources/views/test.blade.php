@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html>
 <head>
   <title>Laravel 8 Uploading Image</title>
@@ -55,4 +55,4 @@
  
 </div>  
 </body>
-</html>
+</html> --}}

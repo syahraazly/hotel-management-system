@@ -23,7 +23,6 @@ class RoomController extends Controller
         $room_id = $room->room_id;
         $room_number = $room->room_number;
         $type_id = $room->type_id;
-        $status = $room->status;  
 
         $data = Type::find($type_id);
 
@@ -36,7 +35,6 @@ class RoomController extends Controller
             'room_id' => $room_id,
             'room_number' =>   $room_number,
             'type_id'=> $type_id,
-            'status'=> $status,
             'type_name' => $type_name,
             'price' => $price,
             'desc' => $desc
@@ -76,13 +74,11 @@ class RoomController extends Controller
 
         $this->validate($request,[
             'room_number' => 'required',
-            'status' => 'required',
             'type_id' => 'required',
         ]);
 
         Rooms::where('room_id',$id)->update([
             'room_number'    =>$request->room_number,
-            'status'    =>$request->status,
             'type_id'    =>$request->type_id,
         ]);
         
