@@ -86,7 +86,32 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            
+            'order_number' => 'required',
+            'customer' => 'required',
+            'customer_email' => 'required',
+            'order_date' => 'required',
+            'check_in' => 'required',
+            'check_out' => 'required',
+            'guest_name' => 'required',
+            'rooms_amount' => 'required',
+            'type_id' => 'required',
+            'user_id' => 'required',
+        ]);
+        Order::create([
+            'order_number' => $request->order_number,
+            'customer' => $request->customer,
+            'customer_email' => $request->customer_email,
+            'order_date' => $request->order_date,
+            'check_in' => $request->check_in,
+            'check_out' => $request->check_out,
+            'guest_name' => $request->guest_name,
+            'rooms_amount' => $request->rooms_amount,
+            'type_id' => $request->type_id,
+            'user_id' => $request->user_id,
+        ]);
+        return response()->json([
+            'message' => 'Success!!',
+            'data' => Order::all()
         ]);
     }
 

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('user_id')->nullable();
             $table->unsignedBigInteger('type_id');
             $table->foreign('type_id')->references('type_id')->on('type');
+            $table->timestamps();
         });
 
 
