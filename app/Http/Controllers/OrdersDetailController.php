@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Orders_Detail;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreOrders_DetailRequest;
 use App\Http\Requests\UpdateOrders_DetailRequest;
 
@@ -13,9 +15,18 @@ class OrdersDetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $this->validate($request,[
+            'check_in' => 'date',
+            'check_out' => 'date'
+        ]);
+
+        $detailData = DB::select("select * from orders_details where check_in >= '$request->check_out'");
+
+        return response()->json([
+            $detailData
+        ]);
     }
 
     /**

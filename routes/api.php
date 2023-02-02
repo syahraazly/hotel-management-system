@@ -7,6 +7,7 @@ use App\Http\Controllers\RoomController;
 
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrdersDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,5 +40,8 @@ Route::delete('/room/{id}',[RoomController::class,'destroy']);
 Route::put('/room/{id}', [RoomController::class,'update']);
 
 //Orders
-Route::post('/orders', [OrderController::class,'index']); //bikin order
+Route::get('/orders', [OrderController::class,'index']); //bikin order
 Route::put('/order/{id}', [OrderController::class,'store']);
+
+//Orders Detail
+Route::post('/detailorder',[OrdersDetailController::class,'index']);

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Models\Orders_Detail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePemesananRequest;
 use App\Http\Requests\UpdatePemesananRequest;
@@ -32,6 +34,14 @@ class OrderController extends Controller
         $order_number = $type_id * $hash;
 
         $rooms_amount = DB::table('type')->count();
+
+        $fdate = '2023-01-01';
+        $tdate = '2023-01-04';
+        $datetime1 = new DateTime($fdate);
+        $datetime2 = new DateTime($tdate);
+        $interval = $datetime1->diff($datetime2);
+        $days = $interval->format('%a');//now do whatever you like with $days
+
        
 
         Order::create([
@@ -45,10 +55,15 @@ class OrderController extends Controller
             'type_id' =>$request->type_id,
         ]);
 
+        
+        // Orders_Detail::create([
+        // ]);
+
         return response()->json([
             'message' => 'Success!!',
             'data' => Order::all(),
-            $rooms_amount
+            $rooms_amount,
+            $days   
         ]);
     }
 
