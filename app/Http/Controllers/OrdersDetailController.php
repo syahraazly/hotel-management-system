@@ -7,6 +7,7 @@ use App\Models\Orders_Detail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreOrders_DetailRequest;
 use App\Http\Requests\UpdateOrders_DetailRequest;
+use App\Models\Order;
 
 class OrdersDetailController extends Controller
 {
@@ -22,10 +23,9 @@ class OrdersDetailController extends Controller
             'check_out' => 'date'
         ]);
 
-        $detailData = DB::select("select * from orders_details where check_in >= '$request->check_out'");
+        $detailData = Orders_Detail::find();
 
         return response()->json([
-            $detailData
         ]);
     }
 

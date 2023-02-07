@@ -40,8 +40,9 @@ Route::delete('/room/{id}',[RoomController::class,'destroy']);
 Route::put('/room/{id}', [RoomController::class,'update']);
 
 //Orders
-Route::get('/orders', [OrderController::class,'index']); //bikin order
-Route::post('/orders', [OrderController::class,'store']); 
+Route::post('/orders', [OrderController::class,'index']); //bikin order
+Route::get('/order/{id}', [OrderController::class, 'detail']);
+Route::put('/order/{id}', [OrderController::class,'store']);
 
 //Orders Detail
 Route::post('/detailorder',[OrdersDetailController::class,'index']);

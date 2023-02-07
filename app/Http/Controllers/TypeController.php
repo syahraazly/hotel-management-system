@@ -73,16 +73,16 @@ class TypeController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update($id ,Request $request)
     {
         
         $request->validate([
             'type_name' => 'required',
             'price' => 'required',
             'desc' => 'required',
+            // 'photo' => 'required'
         ]);
 
-        
         if ($request->hasFile('photo')) {
             $photo_name = $request->file('photo')->getClientOriginalName();
             $photo_path = $request->file('photo')->store('images');
@@ -92,6 +92,7 @@ class TypeController extends Controller
             'type_name'     => $request->type_name,
             'price'         => $request->price,
             'desc'          => $request->desc,
+            'photo'         => $request->photo
         ];
 
         if ($request->hasFile('photo')) {
@@ -107,9 +108,6 @@ class TypeController extends Controller
             'photo_path'    =>$photo_path,
         ]);
         
- 
- 
-
         return response()->json([
             'message' => 'Success Update Data!',
             'data' => Type::find($id)
