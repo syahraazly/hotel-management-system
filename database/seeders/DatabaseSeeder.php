@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Rooms;
 use App\Models\User;
 use App\Models\Type;
 use Illuminate\Database\Seeder;
@@ -70,6 +72,35 @@ class DatabaseSeeder extends Seeder
         ];
         foreach ($types as $key => $type){
             Type::create($type);
+        }
+
+
+        $rooms = [
+            [
+                'type_id' => '1',
+                'room_number' => '101',
+          
+            ],
+            [
+                'type_id' => '1',
+                'room_number' => '102',
+            ],
+            [
+                'type_id' => '1',
+                'room_number' => '103',
+            ],
+            [
+                'type_id' => '2',
+                'room_number' => '201',
+            ],
+            [
+                'type_id' => '3',
+                'room_number' => '301',
+            ],
+        ];
+
+        foreach ($rooms as $key => $room){
+            Rooms::create($room);
         }
     }
 }

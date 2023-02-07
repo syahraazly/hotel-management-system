@@ -46,3 +46,7 @@ Route::put('/order/{id}', [OrderController::class,'store']);
 
 //Orders Detail
 Route::post('/detailorder',[OrdersDetailController::class,'index']);
+
+
+//date filter
+Route::post('/datefilter',[OrdersDetailController::class,'index']);
