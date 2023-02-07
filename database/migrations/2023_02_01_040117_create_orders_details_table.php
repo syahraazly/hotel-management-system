@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('order_id')->references('order_id')->on('orders');
             $table->integer('room_id');
             $table->date('access_date');
-            $table->date('price');
+            $table->bigInteger('price');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('orders__details');
+        Schema::dropIfExists('orders_details');
     }
 };

@@ -9,6 +9,9 @@ use App\Models\Orders_Detail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePemesananRequest;
 use App\Http\Requests\UpdatePemesananRequest;
+use App\Models\Rooms;
+use App\Policies\OrdersDetailPolicy;
+use Dflydev\DotAccessData\Data;
 
 class OrderController extends Controller
 {
@@ -35,14 +38,12 @@ class OrderController extends Controller
 
         $rooms_amount = DB::table('type')->count();
 
-        $fdate = '2023-01-01';
-        $tdate = '2023-01-04';
+        $fdate = $request->check_in;
+        $tdate = $request->check_out;
         $datetime1 = new DateTime($fdate);
         $datetime2 = new DateTime($tdate);
         $interval = $datetime1->diff($datetime2);
         $days = $interval->format('%a');//now do whatever you like with $days
-
-       
 
         Order::create([
             'order_number' => $order_number,
@@ -55,15 +56,41 @@ class OrderController extends Controller
             'type_id' =>$request->type_id,
         ]);
 
+
+        $room_id = Rooms::Select('room_id')->where('type_id', $type_id)->get()->first();
+        $room_id = $room_id->room_id;
+  
+
+        // mencari order id
+        $order_id = Order::latest()->first();
+        $order_id = $order_id->order_id;
+
+        //mencari room Orders_Detail
+        $type_id = $request->type_id;
+        $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
+       
+    
+
+        for($i = 0; $i <$days; $i++){
+            $detail = new Orders_Detail();
+            $detail->order_id = $order_id;
+            $detail->room_id = $room_id;
+            $detail->access_date = $fdate;
+            $detail->price = 50000;
+            $detail->save();
+            $fdate = date("Y-m-d",strtotime('+1 days',strtotime($fdate)));
+        }
+
         
-        // Orders_Detail::create([
-        // ]);
+
+        
+        
+        $data = Order::latest()->first();
 
         return response()->json([
             'message' => 'Success!!',
-            'data' => Order::all(),
-            $rooms_amount,
-            $days   
+            'data' => $data,
+            'room available' =>$room,
         ]);
     }
 
@@ -96,9 +123,9 @@ class OrderController extends Controller
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $pemesanan)
+    public function show(Request $request)
     {
-        //
+        
     }
 
     /**

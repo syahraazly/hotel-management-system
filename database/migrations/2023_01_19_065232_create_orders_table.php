@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('order_id');
-            $table->integer('order_number');
+            $table->bigInteger('order_number');
             $table->text('customer_name');
             $table->text('customer_email');
             $table->timestamp('order_date');

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreOrders_DetailRequest;
 use App\Http\Requests\UpdateOrders_DetailRequest;
 use App\Models\Order;
+use App\Models\Type;
 
 class OrdersDetailController extends Controller
 {
@@ -23,7 +24,12 @@ class OrdersDetailController extends Controller
             'check_out' => 'date'
         ]);
 
-        $detailData = Orders_Detail::find();
+        $check_in = $request->check_in;
+        $check_out = $request->check_out;
+
+        // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
+
+        Orders_Detail::Select('id_kamar')->where('check_in',$check_in);
 
         return response()->json([
         ]);
