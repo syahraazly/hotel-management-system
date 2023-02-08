@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Orders_Detail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\Requests\StorePemesananRequest;
 use App\Http\Requests\UpdatePemesananRequest;
 use App\Models\Rooms;
@@ -20,6 +21,11 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function show (){
+        return response()->json([
+            'data' => Order::all()
+        ]);
+    }
     public function index(Request $request)
     {
         $this->validate($request,[
@@ -32,22 +38,24 @@ class OrderController extends Controller
             'type_id' => 'required',
         ]);
 
-        // mengambil string tanggal
-        $date = date('Y-m-d');
-        $timestamp = strtotime($date);
-        $result = date("dm", $timestamp);
-        // mengambil order id
-        $order_id = Order::latest()->first();
-        $order_id = $order_id->order_id;
-        // order id to str
-        $str_order_id = strval($order_id);
+        // // mengambil string tanggal
+        // $date = date('Y-m-d');
+        // $timestamp = strtotime($date);
+        // $result = date("dm", $timestamp);
+        // // mengambil order id
+        // $order_id = Order::latest()->first();
+        // $order_id = $order_id->order_id;
+        // // order id to str
+        // $str_order_id = strval($order_id);
 
-        $order_number = $str_order_id . $result;
+        // $order_number = $str_order_id . $result;
+        $random = mt_rand(1000, 9999);
+
+        $order_number = $random;
 
         $type_id = $request->type_id;
         $customer_name = $request->customer_name;
         $rooms_amount = $request->rooms_amount;
-        $hash = strlen($customer_name);
 
         $rooms_amount = DB::table('type')->count();
 
@@ -101,7 +109,21 @@ class OrderController extends Controller
             'room_number' => $order_number
         ]);
     }
+    public function upstatus(Request $request, $id)
+    {
+        $this->validate($request,[
+            'status' => 'required',
+        ]);
 
+        Order::where('order_id',$id)->update([
+            'status'    =>$request->status,
+        ]);
+
+        return response()->json([
+            'message' => 'Success Update Status Order!',
+            'data' => Order::find($id)
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      *
