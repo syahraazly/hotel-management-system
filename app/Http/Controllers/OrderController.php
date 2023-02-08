@@ -69,10 +69,8 @@ class OrderController extends Controller
             'type_id' =>$request->type_id,
         ]);
 
-
         $room_id = Rooms::Select('room_id')->where('type_id', $type_id)->get()->first();
         $room_id = $room_id->room_id;
-  
 
         // mencari order id
         $order_id = Order::latest()->first();
