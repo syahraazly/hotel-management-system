@@ -31,10 +31,23 @@ class OrderController extends Controller
             'rooms_amount' => 'required',
             'type_id' => 'required',
         ]);
-        $customer_name = $request->customer_name;
+
+        // mengambil string tanggal
+        $date = date('Y-m-d');
+        $timestamp = strtotime($date);
+        $result = date("dm", $timestamp);
+        // mengambil order id
+        $order_id = Order::latest()->first();
+        $order_id = $order_id->order_id;
+        // order id to str
+        $str_order_id = strval($order_id);
+
+        $order_number = $str_order_id . $result;
+
         $type_id = $request->type_id;
+        $customer_name = $request->customer_name;
+        $rooms_amount = $request->rooms_amount;
         $hash = strlen($customer_name);
-        $order_number = $type_id * $hash;
 
         $rooms_amount = DB::table('type')->count();
 
@@ -81,16 +94,13 @@ class OrderController extends Controller
             $fdate = date("Y-m-d",strtotime('+1 days',strtotime($fdate)));
         }
 
-        
-
-        
-        
         $data = Order::latest()->first();
 
         return response()->json([
             'message' => 'Success!!',
             'data' => $data,
             'room available' =>$room,
+            'room_number' => $order_number
         ]);
     }
 
@@ -148,7 +158,7 @@ class OrderController extends Controller
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function pdf($id)
     {
         
     }

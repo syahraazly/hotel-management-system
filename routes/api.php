@@ -41,7 +41,7 @@ Route::put('/room/{id}', [RoomController::class,'update']);
 
 //Orders
 Route::post('/orders', [OrderController::class,'index']); //bikin order
-Route::get('/order/{id}', [OrderController::class, 'detail']);
+Route::get('/orders/pdf/{id}', [OrderController::class, 'pdf']);
 Route::put('/order/{id}', [OrderController::class,'store']);
 
 //Orders Detail
