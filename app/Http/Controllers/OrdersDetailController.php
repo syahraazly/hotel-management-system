@@ -23,15 +23,31 @@ class OrdersDetailController extends Controller
             'check_in' => 'date',
             'check_out' => 'date'
         ]);
-
         $check_in = $request->check_in;
         $check_out = $request->check_out;
 
+        $date = [$check_in,$check_out];
+
+        
+
         // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
 
-        Orders_Detail::Select('id_kamar')->where('check_in',$check_in);
+        $data = DB::table("type")
+        ->leftJoin("rooms", function($join){
+            $join->on("type.type_id", "=", "rooms.room_id");
+        })
+        ->leftJoin("orders_details", function($join)use ($date){
+           
+            $join->on("rooms.room_id", "=", "orders_details.room_id")
+            ->whereBetween('orders_details.access_date',  [$date]);
+        })
+        ->select("type.type_name", "orders_details.access_date")
+        ->whereNull("orders_details.access_date")
+        ->get();
+
 
         return response()->json([
+            $data   
         ]);
     }
 
