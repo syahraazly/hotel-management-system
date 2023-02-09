@@ -22,6 +22,16 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+       
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
         $this->validate($request,[
             'customer_name' => 'required',
             'customer_email' => 'required|email',
@@ -38,12 +48,30 @@ class OrderController extends Controller
 
         $rooms_amount = DB::table('type')->count();
 
+        $check_in = $request->check_in;
+        $check_out = $request->check_out;
+
+        $date = [$check_in,$check_out];
+
         $fdate = $request->check_in;
         $tdate = $request->check_out;
         $datetime1 = new DateTime($fdate);
         $datetime2 = new DateTime($tdate);
         $interval = $datetime1->diff($datetime2);
         $days = $interval->format('%a');//now do whatever you like with $days
+
+        $roomdata = DB::table("type")
+        ->leftJoin("rooms", function($join){
+            $join->on("type.type_id", "=", "rooms.room_id");
+        })
+        ->leftJoin("orders_details", function($join)use ($date){
+           
+            $join->on("rooms.room_id", "=", "orders_details.room_id")
+            ->whereBetween('orders_details.access_date',  [$date]);
+        })
+        ->select("rooms.room_id", "orders_details.access_date")
+        ->whereNull("orders_details.access_date")
+        ->get()->first();
 
         Order::create([
             'order_number' => $order_number,
@@ -57,8 +85,6 @@ class OrderController extends Controller
         ]);
 
 
-        $room_id = Rooms::Select('room_id')->where('type_id', $type_id)->get()->first();
-        $room_id = $room_id->room_id;
   
 
         // mencari order id
@@ -67,14 +93,18 @@ class OrderController extends Controller
 
         //mencari room Orders_Detail
         $type_id = $request->type_id;
-        $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
+        // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
+      
+
+
+
        
     
 
         for($i = 0; $i <$days; $i++){
             $detail = new Orders_Detail();
             $detail->order_id = $order_id;
-            $detail->room_id = $room_id;
+            $detail->room_id = $roomdata->room_id;
             $detail->access_date = $fdate;
             $detail->price = 50000;
             $detail->save();
@@ -90,18 +120,8 @@ class OrderController extends Controller
         return response()->json([
             'message' => 'Success!!',
             'data' => $data,
-            'room available' =>$room,
+            $roomdata
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        
     }
 
     /**

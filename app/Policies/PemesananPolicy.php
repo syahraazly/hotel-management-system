@@ -28,7 +28,7 @@ class PemesananPolicy
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Pemesanan $pemesanan)
+    public function view(User $user,  $pemesanan)
     {
         //
     }
@@ -51,7 +51,7 @@ class PemesananPolicy
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Pemesanan $pemesanan)
+    public function update(User $user,  $pemesanan)
     {
         //
     }
@@ -63,7 +63,7 @@ class PemesananPolicy
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Pemesanan $pemesanan)
+    public function delete(User $user,  $pemesanan)
     {
         //
     }
@@ -75,7 +75,7 @@ class PemesananPolicy
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Pemesanan $pemesanan)
+    public function restore(User $user,  $pemesanan)
     {
         //
     }
@@ -87,7 +87,7 @@ class PemesananPolicy
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Pemesanan $pemesanan)
+    public function forceDelete(User $user,  $pemesanan)
     {
         //
     }

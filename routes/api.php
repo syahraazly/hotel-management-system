@@ -40,7 +40,7 @@ Route::delete('/room/{id}',[RoomController::class,'destroy']);
 Route::put('/room/{id}', [RoomController::class,'update']);
 
 //Orders
-Route::post('/orders', [OrderController::class,'index']); //bikin order
+Route::post('/orders', [OrderController::class,'create']); //bikin order
 Route::put('/order/{id}', [OrderController::class,'store']);
 
 //Orders Detail
@@ -48,4 +48,4 @@ Route::post('/detailorder',[OrdersDetailController::class,'index']);
 
 
 //date filter
-Route::post('/datefilter',[OrdersDetailController::class,'index']);
+Route::post('/datefilter',[OrdersDetailController::class,'create']);
