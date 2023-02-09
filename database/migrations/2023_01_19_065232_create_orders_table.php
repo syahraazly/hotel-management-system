@@ -23,7 +23,7 @@ return new class extends Migration
             $table->date('check_out');
             $table->text('guest_name');
             $table->integer('rooms_amount');
-            $table->enum('status', ['new', 'check in', 'check out']);
+            $table->enum('status', ['new', 'check_in', 'check_out']);
             $table->integer('user_id')->nullable();
             $table->unsignedBigInteger('type_id');
             $table->foreign('type_id')->references('type_id')->on('type');

@@ -42,6 +42,7 @@ Route::put('/room/{id}', [RoomController::class,'update']);
 //Orders
 Route::post('/orders', [OrderController::class,'index']); //bikin order
 Route::get('/orders', [OrderController::class, 'show']);
+Route::get('/orders/{id}', [OrderController::class, 'detail']);
 Route::put('/orders/status/{id}', [OrderController::class, 'upstatus']); //update status
 Route::put('/order/{id}', [OrderController::class,'store']);
 

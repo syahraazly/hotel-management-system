@@ -26,6 +26,11 @@ class OrderController extends Controller
             'data' => Order::all()
         ]);
     }
+    public function detail($id){
+        return response()->json([
+            'data' => Order::find($id)
+        ]);
+    }
     public function index(Request $request)
     {
         $this->validate($request,[
