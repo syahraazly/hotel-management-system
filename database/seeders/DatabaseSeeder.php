@@ -57,13 +57,11 @@ class DatabaseSeeder extends Seeder
                 'type_name' => 'standart',
                 'price' => '250000',
                 'desc' => 'include bed, television, and private bathroom',
-          
             ],
             [
                 'type_name' => 'suite',
                 'price' => '550000',
                 'desc' => 'include bed, television, private bathroom, living area, and kitchen',
-              
             ],
             [
                 'type_name' => 'presidential',

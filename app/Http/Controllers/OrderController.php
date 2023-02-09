@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Orders_Detail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\Requests\StorePemesananRequest;
 use App\Http\Requests\UpdatePemesananRequest;
 use App\Models\Rooms;
@@ -20,6 +21,16 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function show (){
+        return response()->json([
+            'data' => Order::all()
+        ]);
+    }
+    public function detail($id){
+        return response()->json([
+            'data' => Order::find($id)
+        ]);
+    }
     public function index(Request $request)
     {
        
@@ -41,10 +52,25 @@ class OrderController extends Controller
             'rooms_amount' => 'required',
             'type_id' => 'required',
         ]);
-        $customer_name = $request->customer_name;
+
+        // // mengambil string tanggal
+        // $date = date('Y-m-d');
+        // $timestamp = strtotime($date);
+        // $result = date("dm", $timestamp);
+        // // mengambil order id
+        // $order_id = Order::latest()->first();
+        // $order_id = $order_id->order_id;
+        // // order id to str
+        // $str_order_id = strval($order_id);
+
+        // $order_number = $str_order_id . $result;
+        $random = mt_rand(1000, 9999);
+
+        $order_number = $random;
+
         $type_id = $request->type_id;
-        $hash = strlen($customer_name);
-        $order_number = $type_id * $hash;
+        $customer_name = $request->customer_name;
+        $rooms_amount = $request->rooms_amount;
 
         $rooms_amount = DB::table('type')->count();
 
@@ -84,7 +110,6 @@ class OrderController extends Controller
             'type_id' =>$request->type_id,
         ]);
 
-
   
 
         // mencari order id
@@ -94,12 +119,7 @@ class OrderController extends Controller
         //mencari room Orders_Detail
         $type_id = $request->type_id;
         // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
-      
 
-
-
-       
-    
 
         for($i = 0; $i <$days; $i++){
             $detail = new Orders_Detail();
@@ -111,18 +131,21 @@ class OrderController extends Controller
             $fdate = date("Y-m-d",strtotime('+1 days',strtotime($fdate)));
         }
 
-        
-
-        
-        
         $data = Order::latest()->first();
 
         return response()->json([
             'message' => 'Success!!',
             'data' => $data,
-            $roomdata
+            'room selected' =>$roomdata,
         ]);
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
 
     /**
      * Store a newly created resource in storage.
@@ -133,7 +156,32 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            
+            'order_number' => 'required',
+            'customer' => 'required',
+            'customer_email' => 'required',
+            'order_date' => 'required',
+            'check_in' => 'required',
+            'check_out' => 'required',
+            'guest_name' => 'required',
+            'rooms_amount' => 'required',
+            'type_id' => 'required',
+            'user_id' => 'required',
+        ]);
+        Order::create([
+            'order_number' => $request->order_number,
+            'customer' => $request->customer,
+            'customer_email' => $request->customer_email,
+            'order_date' => $request->order_date,
+            'check_in' => $request->check_in,
+            'check_out' => $request->check_out,
+            'guest_name' => $request->guest_name,
+            'rooms_amount' => $request->rooms_amount,
+            'type_id' => $request->type_id,
+            'user_id' => $request->user_id,
+        ]);
+        return response()->json([
+            'message' => 'Success!!',
+            'data' => Order::all()
         ]);
     }
 
@@ -143,7 +191,7 @@ class OrderController extends Controller
      * @param  \App\Models\Pemesanan  $pemesanan
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function pdf($id)
     {
         
     }

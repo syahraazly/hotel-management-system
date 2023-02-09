@@ -81,14 +81,11 @@ class RoomController extends Controller
             'room_number'    =>$request->room_number,
             'type_id'    =>$request->type_id,
         ]);
-        
- 
 
         return response()->json([
             'message' => 'Success Update Data!',
             'data' => Rooms::find($id)
         ]);
-
 
     }
 
