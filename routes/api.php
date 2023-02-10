@@ -40,7 +40,7 @@ Route::delete('/room/{id}',[RoomController::class,'destroy']);
 Route::put('/room/{id}', [RoomController::class,'update']);
 
 //Orders
-Route::post('/orders', [OrderController::class,'create']); //bikin order
+Route::post('/orders', [OrderController::class, 'storeOrder']); //bikin order
 Route::get('/orders', [OrderController::class, 'show']);
 Route::get('/orders/{id}', [OrderController::class, 'detail']);
 Route::put('/orders/status/{id}', [OrderController::class, 'upstatus']); //update status
