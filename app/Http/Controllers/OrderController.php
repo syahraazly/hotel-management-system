@@ -91,7 +91,6 @@ class OrderController extends Controller
             $join->on("type.type_id", "=", "rooms.room_id");
         })
         ->leftJoin("orders_details", function($join)use ($date){
-           
             $join->on("rooms.room_id", "=", "orders_details.room_id")
             ->whereBetween('orders_details.access_date',  [$date]);
         })
@@ -119,7 +118,12 @@ class OrderController extends Controller
         //mencari room Orders_Detail
         $type_id = $request->type_id;
         // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
-
+        $price = DB::table('orders_details as dp')
+            ->join('rooms as km', 'dp.room_id', '=', 'km.room_id')
+            ->join('type as tk', 'km.type_id', '=', 'tk.type_id')
+            ->select('dp.orders_details_id', 'tk.price')
+            ->where('dp.orders_details_id', 1)
+            ->first();
 
         for($i = 0; $i <$days; $i++){
             $detail = new Orders_Detail();
@@ -137,6 +141,22 @@ class OrderController extends Controller
             'message' => 'Success!!',
             'data' => $data,
             'room selected' =>$roomdata,
+        ]);
+    }
+
+    public function upstatus(Request $request, $id)
+    {
+        $this->validate($request, [
+            'status' => 'required'
+        ]);
+
+        Order::where('order_id', $id)->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json([
+            'message' => 'Success Update Status Order!!',
+            'data' => Order::find($id)
         ]);
     }
 
