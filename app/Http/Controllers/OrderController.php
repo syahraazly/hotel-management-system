@@ -130,7 +130,7 @@ class OrderController extends Controller
             $detail->order_id = $order_id;
             $detail->room_id = $roomdata->room_id;
             $detail->access_date = $fdate;
-            $detail->price = 50000;
+            $detail->price = $price;
             $detail->save();
             $fdate = date("Y-m-d",strtotime('+1 days',strtotime($fdate)));
         }
