@@ -45,10 +45,10 @@ Route::get('/orders', [OrderController::class, 'show']);
 Route::get('/orders/{id}', [OrderController::class, 'detail']);
 Route::put('/orders/status/{id}', [OrderController::class, 'upstatus']); //update status
 Route::put('/order/{id}', [OrderController::class,'store']);
+Route::post('/orderFilter', [OrderController::class, 'orderFilter']);
 
 //Orders Detail
-Route::post('/detailorder',[OrdersDetailController::class,'index']);
-
+Route::post('/detailorder',[OrdersDetailController::class, 'index']);
 
 //date filter
-Route::post('/datefilter',[OrdersDetailController::class,'create']);
+Route::post('/datefilter',[OrdersDetailController::class, 'create']);

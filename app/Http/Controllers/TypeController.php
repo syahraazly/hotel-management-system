@@ -43,7 +43,6 @@ class TypeController extends Controller
 
     public function store(Request $request)
     {
-        
         $this->validate($request,[
             'type_name' => 'required',
             'price' => 'required',
@@ -75,7 +74,6 @@ class TypeController extends Controller
 
     public function update($id ,Request $request)
     {
-        
         $request->validate([
             'type_name' => 'required',
             'price' => 'required',
@@ -83,6 +81,11 @@ class TypeController extends Controller
             // 'photo' => 'required'
         ]);
 
+        $filePath   = '/app/public/images/';
+        $fileCheck  = file_exists((storage_path().$filePath));
+
+        if($fileCheck)
+        
         if ($request->hasFile('photo')) {
             $photo_name = $request->file('photo')->getClientOriginalName();
             $photo_path = $request->file('photo')->store('images');

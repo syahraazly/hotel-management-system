@@ -41,6 +41,56 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function orderFilter(Request $request)
+    {
+        $check_in = $request->check_in;
+        $guest_name = $request->guest_name;
+
+        // $query = Order::query();
+
+        // if($guest_name){
+        //     $query = $query->whereHas('guest_name', function ($query) use ($guest_name){
+        //         $query->where('guest_name', 'like', '%'.$guest_name.'%');
+        //     });
+        // }
+        // $orders = $query->get();
+
+        $orders= [];
+
+
+        if($check_in == null ){
+            $orders = DB::table("orders")
+        ->select("guest_name", "customer_name","customer_email",'rooms_amount','check_in','status',)
+        ->where("guest_name","=",$guest_name)
+        ->get();
+        } 
+        
+        if($guest_name == null ){
+            $orders = DB::table("orders")
+        ->select("guest_name", "customer_name","customer_email",'rooms_amount','check_in','status',)
+        ->where("check_in","=",$check_in)
+        ->get();
+        }
+
+        if($check_in != null && $guest_name != null){
+            $orders = DB::table("orders")
+        ->select("guest_name", "customer_name","customer_email",'rooms_amount','check_in','status',)
+        ->where(function($query) use ($check_in,$guest_name) {
+            $query->where("guest_name","=",$guest_name)
+                ->orWhere("check_in","=",$check_in);
+        })
+        ->get();
+        } 
+
+
+        
+
+
+        
+        return response()->json(([
+            'data' => $orders
+        ]));
+    }
     public function create(Request $request)
     {
         $this->validate($request,[
@@ -108,8 +158,6 @@ class OrderController extends Controller
             'rooms_amount' =>$request->rooms_amount,
             'type_id' =>$request->type_id,
         ]);
-
-  
 
         // mencari order id
         $order_id = Order::latest()->first();
