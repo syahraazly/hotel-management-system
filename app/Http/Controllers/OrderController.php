@@ -41,6 +41,25 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function orderFilter(Request $request)
+    {
+        $check_in = $request->input('check_in');
+        $guest_name = $request->input('guest_name');
+
+        $query = Order::query();
+
+        if($guest_name){
+            $query = $query->whereHas('guest_name', function ($query) use ($guest_name){
+                $query->where('guest_name', 'like', '%'.$guest_name.'%');
+            });
+        }
+
+        $orders = $query->get();
+        
+        return response()->json(([
+            'data' => $orders
+        ]));
+    }
     public function create(Request $request)
     {
         $this->validate($request,[
@@ -109,31 +128,33 @@ class OrderController extends Controller
             'type_id' =>$request->type_id,
         ]);
 
-  
-
         // mencari order id
         $order_id = Order::latest()->first();
         $order_id = $order_id->order_id;
 
         //mencari room Orders_Detail
         $type_id = $request->type_id;
-        // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
-        $price = DB::table('orders_details as dp')
-            ->join('rooms as km', 'dp.room_id', '=', 'km.room_id')
-            ->join('type as tk', 'km.type_id', '=', 'tk.type_id')
-            ->select('dp.orders_details_id', 'tk.price')
-            ->where('dp.orders_details_id', 1)
-            ->first();
-
+     
         for($i = 0; $i <$days; $i++){
             $detail = new Orders_Detail();
             $detail->order_id = $order_id;
             $detail->room_id = $roomdata->room_id;
             $detail->access_date = $fdate;
-            $detail->price = $price;
+            $detail->price = $roomdata->price;
             $detail->save();
             $fdate = date("Y-m-d",strtotime('+1 days',strtotime($fdate)));
         }
+
+        $lastID = $detail->orders_details_id;
+
+        $price = $roomdata->price;
+
+        $price = DB::table('orders_details as dp')
+        ->join('rooms as km', 'dp.room_id', '=', 'km.room_id')
+        ->join('type as tk', 'km.type_id', '=', 'tk.type_id')
+        ->select('dp.orders_details_id', 'tk.price')
+        ->where('dp.orders_details_id', $lastID)
+        ->first();
 
         $data = Order::latest()->first();
 

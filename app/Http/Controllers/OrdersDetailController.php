@@ -27,9 +27,7 @@ class OrdersDetailController extends Controller
         $check_out = $request->check_out;
 
         $date = [$check_in,$check_out];
-
         
-
         // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
 
         $data = DB::table("type")
