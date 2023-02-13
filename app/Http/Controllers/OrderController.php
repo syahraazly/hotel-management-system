@@ -61,7 +61,7 @@ class OrderController extends Controller
         if($check_in == null ){
             $orders = DB::table("orders")
         ->select("guest_name", "customer_name","customer_email",'rooms_amount','check_in','status',)
-        ->where("guest_name","=",$guest_name)
+        ->where("guest_name", "like", "%$guest_name%")
         ->get();
         } 
         
@@ -74,19 +74,14 @@ class OrderController extends Controller
 
         if($check_in != null && $guest_name != null){
             $orders = DB::table("orders")
-        ->select("guest_name", "customer_name","customer_email",'rooms_amount','check_in','status',)
-        ->where(function($query) use ($check_in,$guest_name) {
-            $query->where("guest_name","=",$guest_name)
-                ->orWhere("check_in","=",$check_in);
-        })
-        ->get();
+            ->select("guest_name", "customer_name","customer_email",'rooms_amount','check_in','status',)
+            ->where(function($query) use ($check_in,$guest_name) {
+                $query->where("guest_name","=",$guest_name)
+                    ->orWhere("check_in","=",$check_in);
+            })
+            ->get();
         } 
 
-
-        
-
-
-        
         return response()->json(([
             'data' => $orders
         ]));
