@@ -30,23 +30,54 @@ class OrdersDetailController extends Controller
         
         // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
 
-        $data = DB::table("type")
-        ->leftJoin("rooms", function($join){
-            $join->on("type.type_id", "=", "rooms.room_id");
-        })
-        ->leftJoin("orders_details", function($join)use ($date){
-           
-            $join->on("rooms.room_id", "=", "orders_details.room_id")
-            ->whereBetween('orders_details.access_date',  [$date]);
-        })
-        ->select("type.type_name", "orders_details.access_date")
-        ->whereNull("orders_details.access_date")
-        ->get();
+            $data = DB::table('type')
+            ->select('type.type_name', 'orders_details.access_date','type.photo_name','type.desc','type.price')
+            ->leftJoin('rooms', 'type.type_id', '=', 'rooms.type_id')
+            ->leftJoin('orders_details', function ($join) use ($date) {
+                $join->on('rooms.room_id', '=', 'orders_details.room_id')
+                    ->whereBetween('orders_details.access_date', $date);
+            })
+            ->whereNull('orders_details.access_date')
+            ->get();
+            
+            $groupedData = [];
+
+foreach ($data as $item) {
+    if (!isset($groupedData[$item->type_name])) {
+        $groupedData[$item->type_name] = $item;
+    }
+}
+
+$result = array_values($groupedData);
 
 
         return response()->json([
-            $data   
+            $result
         ]);
+    }
+
+
+    public function checkorder(Request $request){
+        $this->validate($request,[
+            'order_number' => 'required',
+            'email' => 'email'
+        ]);
+
+        $email = $request->email; // ubah dengan email yang diinginkan
+$order_number = $request->order_number; // ubah dengan order_number yang diinginkan
+
+$results = DB::table('orders')
+    ->join('orders_details', 'orders.order_id', '=', 'orders_details.order_id')
+    ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
+    ->join('type', 'rooms.type_id', '=', 'type.type_id')
+    ->select('rooms.room_id', 'type.type_name', 'orders.check_in', 'orders.check_out', 'orders.guest_name', 'orders.customer_name')
+    ->where('orders.customer_email', '=', $email)
+    ->where('orders.order_number', '=', $order_number)
+    ->get()->first();
+
+return response()->json($results);
+
+
     }
 
     /**

@@ -29,8 +29,6 @@ return new class extends Migration
             $table->foreign('type_id')->references('type_id')->on('type');
             $table->timestamps();
         });
-
-
     }
 
     /**
