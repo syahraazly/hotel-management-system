@@ -8,6 +8,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrdersDetailController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,17 @@ use App\Http\Controllers\OrdersDetailController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+Route::post('/login', [UserController::class, 'login']);
+
+Route::group(['middleware' => ['jwt.verify']], function(){
+    Route::group(['middleware' => ['api.receptionist']], function(){
+
+    });
+    Route::group(['middleware' => ['api.admin']], function(){
+        
+    });
+    
 });
 
 //CRUD type
