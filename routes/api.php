@@ -42,7 +42,7 @@ Route::get('/type/{id}',[TypeController::class,'detail']);
 Route::get('/type/detail/{type_id}',[TypeController::class,'detailType']);
 Route::post('/type',[TypeController::class,'store']);
 Route::delete('/type/{id}',[TypeController::class,'destroy']);
-Route::put('/type/{id}', [TypeController::class,'update']);
+Route::post('/type/{id}', [TypeController::class,'update']);
 
 // CRUD room
 Route::get('/room',[RoomController::class,'show']); //

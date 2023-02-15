@@ -6,6 +6,8 @@ use App\Models\Rooms;
 use App\Models\Type;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 use function PHPSTORM_META\type;
 
 use Illuminate\Support\Facades\Validator;
@@ -72,50 +74,50 @@ class TypeController extends Controller
         ]);
     }
 
-    public function update($id ,Request $request)
+    public function update($id, Request $request)
     {
         $request->validate([
             'type_name' => 'required',
             'price' => 'required',
             'desc' => 'required',
-            // 'photo' => 'required'
+            'photo' => 'required'
         ]);
 
-        $filePath   = '/app/public/images/';
-        $fileCheck  = file_exists((storage_path().$filePath));
+        $type = Type::findOrFail($id);
 
-        if($fileCheck)
-        
         if ($request->hasFile('photo')) {
             $photo_name = $request->file('photo')->getClientOriginalName();
             $photo_path = $request->file('photo')->store('images');
+
+            Storage::delete('public/' . $type->photo_path);
+
+            // Hapus foto lama sebelum memindahkan foto baru ke direktori public/images
+            if (file_exists(public_path('images/' . $type->photo_name))) {
+                unlink(public_path('images/' . $type->photo_name));
+            }
+
+            // Pindahkan foto baru ke direktori public/images
+            $location = 'images';
+            $request->file('photo')->move($location, $photo_name);
+        } else {
+            $photo_name = $type->photo_name;
+            $photo_path = $type->photo_path;
         }
 
-        $updateData = [
-            'type_name'     => $request->type_name,
-            'price'         => $request->price,
-            'desc'          => $request->desc,
-            'photo'         => $request->photo
-        ];
-
-        if ($request->hasFile('photo')) {
-            $updateData['photo_name'] = $photo_name;
-            $updateData['photo_path'] = $photo_path;
-        }
-
-        Type::where('type_id',$id)->update([
-            'type_name'    =>$request->type_name,
-            'price'    =>$request->price,
-            'desc'    =>$request->desc,
-            'photo_name'    =>$photo_name,
-            'photo_path'    =>$photo_path,
+        Type::where('type_id', $id)->update([
+            'type_name' => $request->type_name,
+            'price' => $request->price,
+            'desc' => $request->desc,
+            'photo_name' => $photo_name,
+            'photo_path' => $photo_path,
         ]);
-        
+
         return response()->json([
             'message' => 'Success Update Data!',
             'data' => Type::find($id)
         ]);
     }
+
 
     public function destroy($id)
     {
