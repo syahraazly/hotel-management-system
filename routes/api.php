@@ -74,7 +74,7 @@ Route::get('/reciept/{id}',[OrdersDetailController::class, 'reciept']);
 
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-Route::put('/updateuser/{id}', [UserController::class, 'update']);
-Route::delete('/delete/{id}', [UserController::class, 'delete']);
+Route::put('/user/{id}', [UserController::class, 'update']);
+Route::delete('/user/{id}', [UserController::class, 'delete']);
 
 
