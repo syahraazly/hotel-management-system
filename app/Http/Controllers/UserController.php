@@ -102,7 +102,7 @@ class UserController extends Controller
 
 
     public function delete($id){
-        User::where('user_id',$id)->delete();
+        User::where('id',$id)->delete();
 
         return response(["Data telah terhapus"]);
     }
