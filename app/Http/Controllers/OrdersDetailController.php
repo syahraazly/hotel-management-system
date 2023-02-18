@@ -52,7 +52,7 @@ $result = array_values($groupedData);
 
 
         return response()->json([
-            $result
+            'data' => $result
         ]);
     }
 
