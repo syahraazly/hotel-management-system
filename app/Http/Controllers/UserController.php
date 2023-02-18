@@ -74,6 +74,12 @@ class UserController extends Controller
         return response()->json(compact('user'));
     }
 
+    public function show(){
+        return response()->json([
+            'data' => User::all()
+        ]);
+    }
+
     public function update(Request $request,$id){
         
         $request->validate([
