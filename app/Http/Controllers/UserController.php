@@ -78,15 +78,17 @@ class UserController extends Controller
         
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required'
         ]);
 
-        User::where('type_id', $id)->update([
+       
+
+        User::where('id', $id)->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' =>Hash::make( $request->password),
             'role' => $request->role,
         ]);
 
