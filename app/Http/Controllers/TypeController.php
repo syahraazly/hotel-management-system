@@ -121,7 +121,7 @@ class TypeController extends Controller
 
     public function destroy($id)
     {
-        $data = Type::where('type_id',$id)->delete();
+        Type::where('type_id',$id)->delete();
 
         return response()->json([
             'message' => 'Success Delete Data!',

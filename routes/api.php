@@ -24,7 +24,7 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/login', [UserController::class, 'login']);
+
 
 Route::group(['middleware' => ['jwt.verify']], function(){
     Route::group(['middleware' => ['api.receptionist']], function(){
@@ -64,7 +64,17 @@ Route::post('/detailorder',[OrdersDetailController::class, 'index']);
 
 //date filter
 Route::post('/datefilter',[OrdersDetailController::class, 'index']);
+
+//check order
 Route::post('/checkorder',[OrdersDetailController::class, 'checkorder']);
 
 //reciept
-Route::post('/datefilter',[OrdersDetailController::class, 'index']);
+Route::get('/reciept/{id}',[OrdersDetailController::class, 'reciept']);
+
+
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/register', [UserController::class, 'register']);
+Route::put('/updateuser/{$id}', [UserController::class, 'update']);
+Route::post('/delete/{id}', [UserController::class, 'delete']);
+
+

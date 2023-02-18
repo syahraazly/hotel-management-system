@@ -57,7 +57,7 @@ $result = array_values($groupedData);
     }
 
 
-    public function checkorder(Request $request){
+ public function  checkorder(Request $request){
         $this->validate($request,[
             'order_number' => 'required',
             'email' => 'email'
@@ -85,9 +85,9 @@ return response()->json($results);
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function reciept($order_number)
     {
-        //
+        
     }
 
     /**

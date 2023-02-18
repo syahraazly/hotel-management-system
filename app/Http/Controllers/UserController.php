@@ -36,7 +36,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|enum'
+            'role' => 'required'
         ]);
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
@@ -72,5 +72,36 @@ class UserController extends Controller
         }
 
         return response()->json(compact('user'));
+    }
+
+    public function update(Request $request,$id){
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+            'role' => 'required'
+        ]);
+
+        User::where('type_id', $id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+            'role' => $request->role,
+        ]);
+
+        $data = User::find($id);
+
+        return response([
+            "new data" => $data
+        ]);
+    }
+
+
+
+    public function delete($id){
+        User::where('user_id',$id)->delete();
+
+        return response(["Data telah terhapus"]);
     }
 }
