@@ -219,6 +219,7 @@ class OrderController extends Controller
                 $fdate = date("Y-m-d", strtotime('+1 days', strtotime($fdate)));  
             }
             $current_room_id++;
+            $fdate = $request->check_in;
         }
             
 
@@ -227,19 +228,26 @@ class OrderController extends Controller
 
 
 $booked_rooms = DB::table('orders_details')
-                ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
-                ->join('orders', 'orders_details.order_id', '=', 'orders.order_id')
-                ->where('orders_details.order_id' ,'=', $order_id)
-                ->select('rooms.room_id', 'rooms.room_number', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
-                ->groupBy('rooms.room_id', 'rooms.room_number', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
-                ->get();
+->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
+->join('orders', 'orders_details.order_id', '=', 'orders.order_id')
+->leftJoin('type', 'rooms.type_id', '=', 'type.type_id')
+->where('orders_details.order_id', '=', $order_id)
+->select('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
+->groupBy('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
+->get();
 
+
+$price = Type::find($type_id);
+$price = $price->price;
+
+$grand_total = $rooms_amount*$days*$price;
 
 
         return response()->json([
             'message' => 'Success!!',
             'data' => $data,
             'room selected' =>$booked_rooms,
+            'Grand total' => $grand_total
         ]);
     }
 

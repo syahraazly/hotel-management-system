@@ -65,3 +65,6 @@ Route::post('/detailorder',[OrdersDetailController::class, 'index']);
 //date filter
 Route::post('/datefilter',[OrdersDetailController::class, 'index']);
 Route::post('/checkorder',[OrdersDetailController::class, 'checkorder']);
+
+//reciept
+Route::post('/datefilter',[OrdersDetailController::class, 'index']);
