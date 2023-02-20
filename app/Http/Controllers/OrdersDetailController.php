@@ -31,7 +31,7 @@ class OrdersDetailController extends Controller
         // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
 
             $data = DB::table('type')
-            ->select('type.type_name', 'orders_details.access_date','type.photo_name','type.desc','type.price')
+            ->select('type.type_id','type.type_name', 'orders_details.access_date','type.photo_name','type.desc','type.price')
             ->leftJoin('rooms', 'type.type_id', '=', 'rooms.type_id')
             ->leftJoin('orders_details', function ($join) use ($date) {
                 $join->on('rooms.room_id', '=', 'orders_details.room_id')

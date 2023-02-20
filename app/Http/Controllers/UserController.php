@@ -101,11 +101,9 @@ class UserController extends Controller
         $data = User::find($id);
 
         return response([
-            "new data" => $data
+            "data" => $data
         ]);
     }
-
-
 
     public function delete($id){
         User::where('id',$id)->delete();
