@@ -87,8 +87,9 @@ return response()->json($results);
      */
     public function reciept($order_number)
     {
-        $data = Order::latest()->first();
-        $order_id = $data->order_id;
+        $order_id = DB::table('orders')
+        ->where('order_number','=',$order_number)
+        ->value('order_id');
         
         $days = DB::table('orders_details')->select('access_date')
         ->where('order_id','=',$order_id)
@@ -120,6 +121,7 @@ $type_id = DB::table('orders')
 
 
 $grand_total = $days*$price;
+$data = Order::find($order_id);
 
 
 return response()->json([
