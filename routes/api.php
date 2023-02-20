@@ -69,7 +69,7 @@ Route::post('/datefilter',[OrdersDetailController::class, 'index']);
 Route::post('/checkorder',[OrdersDetailController::class, 'checkorder']);
 
 //reciept
-Route::get('/reciept/{order_number}',[OrdersDetailController::class, 'reciept']);
+Route::get('/receipt/{order_number}',[OrdersDetailController::class, 'reciept']);
 
 
 Route::post('/login', [UserController::class, 'login']);
