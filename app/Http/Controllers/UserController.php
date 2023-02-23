@@ -27,7 +27,21 @@ class UserController extends Controller
             return response()->json(['error' => 'could not create token'], 500);
         }
 
-        return response()->json(compact('token'));
+        // return response()->json(compact('token'));
+        return  $this->createNewToken($token);
+    }
+    public function userProfile(){
+        return response()->json(auth()->user());
+    }
+
+    protected function createNewToken($token){
+        // dd(auth()->user()->role);
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => config('jwt.ttl'),
+            'user' => auth()->user()
+        ]);
     }
 
     public function register(Request $request)
