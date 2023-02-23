@@ -95,43 +95,33 @@ return response()->json($results);
         ->where('order_id','=',$order_id)
         ->count();
        
+        $booked_rooms = DB::table('orders_details')
+        ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
+        ->join('orders', 'orders_details.order_id', '=', 'orders.order_id')
+        ->leftJoin('type', 'rooms.type_id', '=', 'type.type_id')
+        ->where('orders_details.order_id', '=', $order_id)
+        ->select('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
+        ->groupBy('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
+        ->get();
 
-
-$booked_rooms = DB::table('orders_details')
-->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
-->join('orders', 'orders_details.order_id', '=', 'orders.order_id')
-->leftJoin('type', 'rooms.type_id', '=', 'type.type_id')
-->where('orders_details.order_id', '=', $order_id)
-->select('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
-->groupBy('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
-->get();
-
-
-$type_id = DB::table('orders')
-        ->where('order_number','=',$order_number)
-        ->value('type_id');
+        $type_id = DB::table('orders')
+            ->where('order_number','=',$order_number)
+            ->value('type_id');
      
+        $price = DB::table('type')
+            ->where('type_id','=',$type_id)
+            ->value('price');
 
+        $grand_total = $days*$price;
+        $data = Order::find($order_id);
 
+        return response()->json([
+            // 'message' => 'Success!!',
+            'data' => $data,
+            'room_selected' =>$booked_rooms,
+            'grand_total' => $grand_total
 
- $price = DB::table('type')
-->where('type_id','=',$type_id)
-->value('price');
-
-
-
-$grand_total = $days*$price;
-$data = Order::find($order_id);
-
-
-return response()->json([
-    'message' => 'Success!!',
-    'data' => $data,
-    'room selected' =>$booked_rooms,
-    'Grand total' => $grand_total
-
-]);
-
+        ]);
 
     }
 

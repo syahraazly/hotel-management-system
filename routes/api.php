@@ -31,7 +31,16 @@ Route::group(['middleware' => ['jwt.verify']], function(){
 
     });
     Route::group(['middleware' => ['api.admin']], function(){
+        // CRUD user
+        Route::post('/register', [UserController::class, 'register']);
+        Route::put('/user/{id}', [UserController::class, 'update']);
+        Route::delete('/user/{id}', [UserController::class, 'delete']);
+        Route::get('/user', [UserController::class, 'show']);
         
+        // CRUD type
+        Route::post('/type',[TypeController::class,'store']);
+        Route::delete('/type/{id}',[TypeController::class,'destroy']);
+        Route::post('/type/{id}', [TypeController::class,'update']);
     });
     
 });
@@ -40,13 +49,10 @@ Route::group(['middleware' => ['jwt.verify']], function(){
 Route::get('/type',[TypeController::class,'show']);
 Route::get('/type/{id}',[TypeController::class,'detail']);
 Route::get('/type/detail/{type_id}',[TypeController::class,'detailType']);
-Route::post('/type',[TypeController::class,'store']);
-Route::delete('/type/{id}',[TypeController::class,'destroy']);
-Route::post('/type/{id}', [TypeController::class,'update']);
 
 // CRUD room
-Route::get('/room',[RoomController::class,'show']); //
-Route::get('/room/{id}',[RoomController::class,'detail']); //
+Route::get('/room',[RoomController::class,'show']); 
+Route::get('/room/{id}',[RoomController::class,'detail']); 
 Route::post('/room',[RoomController::class,'store']);
 Route::delete('/room/{id}',[RoomController::class,'destroy']);
 Route::put('/room/{id}', [RoomController::class,'update']);
@@ -69,13 +75,10 @@ Route::post('/datefilter',[OrdersDetailController::class, 'index']);
 Route::post('/checkorder',[OrdersDetailController::class, 'checkorder']);
 
 //reciept
-Route::get('/reciept/{order_number}',[OrdersDetailController::class, 'reciept']);
+Route::get('/orders/receipt/{order_number}',[OrdersDetailController::class, 'reciept']);
 
 
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/register', [UserController::class, 'register']);
-Route::put('/user/{id}', [UserController::class, 'update']);
-Route::delete('/user/{id}', [UserController::class, 'delete']);
-Route::get('/user', [UserController::class, 'show']);
+
 
 
