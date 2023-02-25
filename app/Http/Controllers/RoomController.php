@@ -14,8 +14,6 @@ class RoomController extends Controller
         return response()->json($room);
     }
 
-
-
     public function detail($id)
     {
         $room = Rooms::find($id);
@@ -40,8 +38,6 @@ class RoomController extends Controller
             'desc' => $desc
         ]);
     }
-
-
 
     public function store(Request $request){
         $this->validate($request,[
@@ -88,6 +84,5 @@ class RoomController extends Controller
         ]);
 
     }
-
 
 }
