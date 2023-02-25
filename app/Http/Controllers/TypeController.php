@@ -58,9 +58,10 @@ class TypeController extends Controller
         $location = 'images';
 
         $file = $request->file('photo');
-        $file->move($location,$photo_name);
-
-
+        $file->move($location, $photo_name);
+        
+        @dd('aaaaaaaa');
+        
         Type::create([
             'type_name' => $request->type_name,
             'price' => $request->price,

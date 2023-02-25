@@ -8,6 +8,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Contracts\Providers\Auth;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth as FacadesJWTAuth;
@@ -30,6 +31,17 @@ class UserController extends Controller
         // return response()->json(compact('token'));
         return  $this->createNewToken($token);
     }
+
+    public function logout(Request $request){
+        $this->guard()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        // $request->session()->invalidate();  
+        return response([
+            'message' => 'success logout'
+        ]);      
+    }
+
     public function userProfile(){
         return response()->json(auth()->user());
     }
@@ -102,8 +114,6 @@ class UserController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required'
         ]);
-
-       
 
         User::where('id', $id)->update([
             'name' => $request->name,

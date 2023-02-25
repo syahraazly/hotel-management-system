@@ -101,17 +101,6 @@ class OrderController extends Controller
             'type_id' => 'required',
         ]);
 
-        // // mengambil string tanggal
-        // $date = date('Y-m-d');
-        // $timestamp = strtotime($date);
-        // $result = date("dm", $timestamp);
-        // // mengambil order id
-        // $order_id = Order::latest()->first();
-        // $order_id = $order_id->order_id;
-        // // order id to str
-        // $str_order_id = strval($order_id);
-
-        // $order_number = $str_order_id . $result;
         $random = mt_rand(1000, 9999);
 
         $order_number = $random;
@@ -138,8 +127,7 @@ class OrderController extends Controller
         ->leftJoin('orders_details', function($join) use ($date){
             $join->on('rooms.room_id', '=', 'orders_details.room_id')
                 ->whereBetween('orders_details.access_date', [$date]);
-              
-        })
+             })
         ->where('type.type_id', $type_id)
         ->whereNull('orders_details.access_date')
         ->orderBy('rooms.room_id', 'asc')
@@ -151,18 +139,16 @@ class OrderController extends Controller
         $type_name = Type::find($type_id);
         $type_name = $type_name->type_name;
 
-
         $emptyRoom = DB::table('type')
-            ->select('type.type_name', 'orders_details.access_date','type.photo_name','type.desc','type.price')
-            ->leftJoin('rooms', 'type.type_id', '=', 'rooms.type_id')
-            ->leftJoin('orders_details', function ($join) use ($date) {
-                $join->on('rooms.room_id', '=', 'orders_details.room_id')
-                    ->whereBetween('orders_details.access_date', $date);
+        ->select('type.type_name', 'orders_details.access_date','type.photo_name','type.desc','type.price')
+        ->leftJoin('rooms', 'type.type_id', '=', 'rooms.type_id')
+        ->leftJoin('orders_details', function ($join) use ($date) {
+            $join->on('rooms.room_id', '=', 'orders_details.room_id')
+                ->whereBetween('orders_details.access_date', $date);
             })
-            ->whereNull('orders_details.access_date')
-            ->where('type_name','=',$type_name)
-            ->count();
-
+        ->whereNull('orders_details.access_date')
+        ->where('type_name','=',$type_name)
+        ->count();
 
         if($emptyRoom<$rooms_amount){
             return response()->json([
@@ -170,8 +156,6 @@ class OrderController extends Controller
                 'Jumlah tersedia' => $emptyRoom
             ]);
         }
-
-
 
         Order::create([
             'order_number' => $order_number,
@@ -190,23 +174,12 @@ class OrderController extends Controller
 
         //mencari room Orders_Detail
         $type_id = $request->type_id;
-        // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
-        // $price = DB::table('orders_details as dp')
-        //     ->join('rooms as km', 'dp.room_id', '=', 'km.room_id')
-        //     ->join('type as tk', 'km.type_id', '=', 'tk.type_id')
-        //     ->select('dp.orders_details_id', 'tk.price')
-        //     ->where('dp.orders_details_id', 1)
-        //     ->first();
-
         
         $room_id = $roomdata->room_id;
         $room_price = Type::find($type_id);
         $room_price = $room_price->price;
         
-        
         $current_room_id = $room_id;
-
-        
 
         for ($room = 1; $room <= $rooms_amount; $room++) {
             for ($i = 0; $i < $days; $i++) {
@@ -222,26 +195,22 @@ class OrderController extends Controller
             $fdate = $request->check_in;
         }
             
-
         $data = Order::latest()->first();
         $order_id = $data->order_id;
 
+        $booked_rooms = DB::table('orders_details')
+        ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
+        ->join('orders', 'orders_details.order_id', '=', 'orders.order_id')
+        ->leftJoin('type', 'rooms.type_id', '=', 'type.type_id')
+        ->where('orders_details.order_id', '=', $order_id)
+        ->select('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
+        ->groupBy('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
+        ->get();
 
-$booked_rooms = DB::table('orders_details')
-->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
-->join('orders', 'orders_details.order_id', '=', 'orders.order_id')
-->leftJoin('type', 'rooms.type_id', '=', 'type.type_id')
-->where('orders_details.order_id', '=', $order_id)
-->select('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
-->groupBy('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
-->get();
+        $price = Type::find($type_id);
+        $price = $price->price;
 
-
-$price = Type::find($type_id);
-$price = $price->price;
-
-$grand_total = $rooms_amount*$days*$price;
-
+        $grand_total = $rooms_amount*$days*$price;
 
         return response()->json([
             'message' => 'Success!!',

@@ -57,35 +57,13 @@ $result = array_values($groupedData);
     }
 
 
- public function  checkorder(Request $request){
-        $this->validate($request,[
-            'order_number' => 'required',
-            'email' => 'email'
-        ]);
-
-        $email = $request->email; // ubah dengan email yang diinginkan
-$order_number = $request->order_number; // ubah dengan order_number yang diinginkan
-
-$results = DB::table('orders')
-    ->join('orders_details', 'orders.order_id', '=', 'orders_details.order_id')
-    ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
-    ->join('type', 'rooms.type_id', '=', 'type.type_id')
-    ->select('rooms.room_id', 'type.type_name', 'orders.check_in', 'orders.check_out', 'orders.guest_name', 'orders.customer_name')
-    ->where('orders.customer_email', '=', $email)
-    ->where('orders.order_number', '=', $order_number)
-    ->get()->first();
-
-return response()->json($results);
-
-
-    }
-
+    
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function reciept($order_number)
+    public function receipt($order_number)
     {
         $order_id = DB::table('orders')
         ->where('order_number','=',$order_number)
@@ -94,33 +72,72 @@ return response()->json($results);
         $days = DB::table('orders_details')->select('access_date')
         ->where('order_id','=',$order_id)
         ->count();
-       
+  
         $booked_rooms = DB::table('orders_details')
         ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
         ->join('orders', 'orders_details.order_id', '=', 'orders.order_id')
         ->leftJoin('type', 'rooms.type_id', '=', 'type.type_id')
         ->where('orders_details.order_id', '=', $order_id)
-        ->select('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
+        ->select('rooms.room_id', 'rooms.room_number', 'type.type_name', DB::raw("CONCAT(FORMAT(type.price, 0, 'id_ID')) as price"), 'orders.check_in', 'orders.check_out', 'orders.customer_name')
         ->groupBy('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
         ->get();
 
+        
         $type_id = DB::table('orders')
-            ->where('order_number','=',$order_number)
-            ->value('type_id');
-     
+        ->where('order_number','=',$order_number)
+        ->value('type_id');
+        
         $price = DB::table('type')
-            ->where('type_id','=',$type_id)
-            ->value('price');
-
-        $grand_total = $days*$price;
+        ->where('type_id','=',$type_id)
+        ->value('price');
+        
+        $grand_total = number_format($days*$price, 0, ',', '.');
         $data = Order::find($order_id);
-
+        
         return response()->json([
             // 'message' => 'Success!!',
             'data' => $data,
-            'room_selected' =>$booked_rooms,
+            // 'days' => $days,
+            'room_selected' =>$booked_rooms, 
             'grand_total' => $grand_total
+            
+        ]);
+        
+    }
 
+    public function checkorder(Request $request){
+        $this->validate($request,[
+            'order_number' => 'required',
+            'email' => 'email'
+        ]);
+
+        $email = $request->email; // ubah dengan email yang diinginkan
+        $order_number = $request->order_number; // ubah dengan order_number yang diinginkan
+
+        $results = DB::table('orders')
+            ->join('orders_details', 'orders.order_id', '=', 'orders_details.order_id')
+            ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
+            ->join('type', 'rooms.type_id', '=', 'type.type_id')
+            ->select('rooms.room_id', 'type.type_name', 'orders.check_in', 'orders.check_out', 'orders.guest_name', 'orders.customer_name')
+            ->where('orders.customer_email', '=', $email)
+            ->where('orders.order_number', '=', $order_number)
+            ->get()->first();
+
+            // memanggil method receipt
+            $receiptResponse = $this->receipt($order_number);
+
+            // if ($receiptResponse->status() === 200){
+            //     $receiptData = $receiptResponse->original;
+            //     return response()->json([
+            //         'order_data' => $results,
+            //         'receipt_data' => $receiptData
+            //     ]);
+            // }
+        // $data = $this->receipt($order_number)original['data'];
+        // $data = Order::find($request);
+
+        return response()->json([
+            'error' => 'Failed load data receipt'
         ]);
 
     }

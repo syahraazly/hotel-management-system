@@ -27,6 +27,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::group(['middleware' => ['jwt.verify']], function(){
+    Route::post('/login', [UserController::class, 'login']);
+    Route::post('/logout', [UserController::class, 'logout']);
+
     Route::group(['middleware' => ['api.receptionist']], function(){
 
     });
@@ -75,10 +78,10 @@ Route::post('/datefilter',[OrdersDetailController::class, 'index']);
 Route::post('/checkorder',[OrdersDetailController::class, 'checkorder']);
 
 //reciept
-Route::get('/orders/receipt/{order_number}',[OrdersDetailController::class, 'reciept']);
+Route::get('/orders/receipt/{order_number}',[OrdersDetailController::class, 'receipt']);
 
 
-Route::post('/login', [UserController::class, 'login']);
+
 
 
 
