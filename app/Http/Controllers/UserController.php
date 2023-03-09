@@ -47,7 +47,6 @@ class UserController extends Controller
     }
 
     protected function createNewToken($token){
-        // dd(auth()->user()->role);
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -77,7 +76,7 @@ class UserController extends Controller
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user','token'),201);
     }
-    
+
     public function getAuthenticatedUser()
     {
         try {
