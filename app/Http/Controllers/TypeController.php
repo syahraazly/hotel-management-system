@@ -22,6 +22,7 @@ class TypeController extends Controller
      */
     public function show()
     {
+
        
         return response()->json([
             'data' => Type::all()
