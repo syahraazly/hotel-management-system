@@ -30,25 +30,25 @@ class OrdersDetailController extends Controller
         
         // $room = Rooms::Select('room_number')->where('type_id', $type_id)->get();
 
-            $data = DB::table('type')
-            ->select('type.type_id','type.type_name', 'orders_details.access_date','type.photo_name','type.desc','type.price')
-            ->leftJoin('rooms', 'type.type_id', '=', 'rooms.type_id')
-            ->leftJoin('orders_details', function ($join) use ($date) {
-                $join->on('rooms.room_id', '=', 'orders_details.room_id')
-                    ->whereBetween('orders_details.access_date', $date);
-            })
-            ->whereNull('orders_details.access_date')
-            ->get();
-            
-            $groupedData = [];
+        $data = DB::table('type')
+        ->select('type.type_id','type.type_name', 'orders_details.access_date','type.photo_name','type.desc','type.price')
+        ->leftJoin('rooms', 'type.type_id', '=', 'rooms.type_id')
+        ->leftJoin('orders_details', function ($join) use ($date) {
+            $join->on('rooms.room_id', '=', 'orders_details.room_id')
+                ->whereBetween('orders_details.access_date', $date);
+        })
+        ->whereNull('orders_details.access_date')
+        ->get();
+        
+        $groupedData = [];
 
-foreach ($data as $item) {
-    if (!isset($groupedData[$item->type_name])) {
-        $groupedData[$item->type_name] = $item;
-    }
-}
+        foreach ($data as $item) {
+            if (!isset($groupedData[$item->type_name])) {
+                $groupedData[$item->type_name] = $item;
+            }
+        }
 
-$result = array_values($groupedData);
+        $result = array_values($groupedData);
 
 
         return response()->json([
@@ -73,12 +73,13 @@ $result = array_values($groupedData);
         ->where('order_id','=',$order_id)
         ->count();
   
-        $booked_rooms = DB::table('orders_details')
+
+        $booked = DB::table('orders_details')
         ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
         ->join('orders', 'orders_details.order_id', '=', 'orders.order_id')
         ->leftJoin('type', 'rooms.type_id', '=', 'type.type_id')
         ->where('orders_details.order_id', '=', $order_id)
-        ->select('rooms.room_id', 'rooms.room_number', 'type.type_name', DB::raw("CONCAT(FORMAT(type.price, 0, 'id_ID')) as price"), 'orders.check_in', 'orders.check_out', 'orders.customer_name')
+        ->select('rooms.room_id', 'rooms.room_number', 'type.type_name', DB::raw("CONCAT(FORMAT(type.price, 0, 'id_ID')) as price"), 'orders.check_in', 'orders.check_out', 'orders.customer_name', DB::raw("DATEDIFF(orders.check_out, orders.check_in) as days"))
         ->groupBy('rooms.room_id', 'rooms.room_number', 'type.type_name', 'type.price', 'orders.check_in', 'orders.check_out', 'orders.customer_name')
         ->get();
 
@@ -97,8 +98,10 @@ $result = array_values($groupedData);
         return response()->json([
             // 'message' => 'Success!!',
             'data' => $data,
-            // 'days' => $days,
-            'room_selected' =>$booked_rooms, 
+            'days' => $days,
+            // 'booked' => $booked,
+            // 'price' => $price,
+            'room_selected' =>$booked, 
             'grand_total' => $grand_total
             
         ]);
