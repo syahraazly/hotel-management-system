@@ -39,7 +39,7 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     });
     Route::group(['middleware' => ['api.admin']], function(){
         // CRUD user
-        Route::post('/register', [UserController::class, 'register']);
+        Route::post('/user', [UserController::class, 'register']);
         Route::put('/user/{id}', [UserController::class, 'update']);
         Route::delete('/user/{id}', [UserController::class, 'delete']);
         Route::get('/user', [UserController::class, 'show']);

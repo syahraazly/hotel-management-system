@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -61,6 +62,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'password_confirmation' => 'required',
             'role' => 'required'
         ]);
         if($validator->fails()){
@@ -70,6 +72,7 @@ class UserController extends Controller
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
+            'password_confirmation' => Hash::make($request->get('password_confirmation')),
             'role' => $request->get('role')
         ]);
 
@@ -101,8 +104,15 @@ class UserController extends Controller
     }
 
     public function show(){
+        $total = DB::table('users')->count();
+        $totalRecep = DB::table('users')->where('role', 'receptionist')->count();
+        $totalAdmin = DB::table('users')->where('role', 'admin')->count();
+
         return response()->json([
-            'data' => User::all()
+            'total' => $total,
+            'total_recep' => $totalRecep,
+            'total_admin' => $totalAdmin,
+            'user' => User::all()
         ]);
     }
 
@@ -125,7 +135,8 @@ class UserController extends Controller
         $data = User::find($id);
 
         return response([
-            "data" => $data
+            "message" => "Succesfully updated user",
+            "user" => $data
         ]);
     }
 

@@ -50,7 +50,6 @@ class OrdersDetailController extends Controller
 
         $result = array_values($groupedData);
 
-
         return response()->json([
             'data' => $result
         ]);
@@ -94,12 +93,24 @@ class OrdersDetailController extends Controller
         
         $grand_total = number_format($days*$price, 0, ',', '.');
         $data = Order::find($order_id);
+
+//         $total_income = DB::table('orders_details')
+//     ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
+//     ->join('orders', 'orders_details.order_id', '=', 'orders.order_id')
+//     ->leftJoin('type', 'rooms.type_id', '=', 'type.type_id')
+//     ->select(DB::raw('SUM(type.price * DATEDIFF(orders.check_out, orders.check_in)) as total_income'))
+//     ->first();
+
+// return response()->json([
+//     'total_income' => number_format($total_income->total_income, 0, ',', '.')
+// ]);
+
         
         return response()->json([
             // 'message' => 'Success!!',
             'data' => $data,
             'days' => $days,
-            // 'booked' => $booked,
+            // 'revenue' => $total_income,
             // 'price' => $price,
             'room_selected' =>$booked, 
             'grand_total' => $grand_total
@@ -129,16 +140,7 @@ class OrdersDetailController extends Controller
             // memanggil method receipt
             $receiptResponse = $this->receipt($order_number);
 
-            // if ($receiptResponse->status() === 200){
-            //     $receiptData = $receiptResponse->original;
-            //     return response()->json([
-            //         'order_data' => $results,
-            //         'receipt_data' => $receiptData
-            //     ]);
-            // }
-        // $data = $this->receipt($order_number)original['data'];
-        // $data = Order::find($request);
-
+         
         return response()->json([
             'error' => 'Failed load data receipt'
         ]);

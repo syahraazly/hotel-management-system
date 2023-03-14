@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Rooms;
 use App\Models\Type;
-use GuzzleHttp\Psr7\Response;
+use App\Models\Rooms;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-
+use GuzzleHttp\Psr7\Response;
 use function PHPSTORM_META\type;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -22,9 +21,12 @@ class TypeController extends Controller
      */
     public function show()
     {
+        $totalType = DB::table('type')->count();
+        $totalRooms = DB::table('rooms')->count();
 
-       
         return response()->json([
+            'total_type' => $totalType,
+            'total_room' => $totalRooms,
             'data' => Type::all()
         ]);
     }
@@ -60,8 +62,6 @@ class TypeController extends Controller
 
         $file = $request->file('photo');
         $file->move($location, $photo_name);
-        
-        @dd('aaaaaaaa');
         
         Type::create([
             'type_name' => $request->type_name,

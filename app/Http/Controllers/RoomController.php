@@ -51,7 +51,7 @@ class RoomController extends Controller
 
         ]);
         return response()->json([
-            'message' => 'Success!!',
+            'message' => 'Successfully Create Room!!',
             'data' => Rooms::all()
         ]);
     }
@@ -79,7 +79,7 @@ class RoomController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Success Update Data!',
+            'message' => 'Successfully Update Room!',
             'data' => Rooms::find($id)
         ]);
 

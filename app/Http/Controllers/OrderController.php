@@ -25,15 +25,19 @@ class OrderController extends Controller
     public function show (){
         $total_booking = DB::table('orders')->count();
         $check_in = DB::table('orders')->where('status', 'Check In')->count();
+
         $total_revenue = DB::table('orders_details')
-                ->join('type', 'orders_details.type_id', '=', 'type.type_id')
-                ->sum(DB::raw('type.price * orders_details.room_id'));
+        ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
+        ->join('orders', 'orders_details.order_id', '=', 'orders.order_id')
+        ->leftJoin('type', 'rooms.type_id', '=', 'type.type_id')
+        ->select(DB::raw('SUM(type.price * DATEDIFF(orders.check_out, orders.check_in)) as total_income'))
+        ->first();
 
         return response()->json([
             'data' => Order::all(),
             'booking' => $total_booking,
             'data_check' => $check_in,
-            'total' => $total_revenue
+            'total_income' => number_format($total_revenue->total_income, 0, ',', '.')
         ]);
     }
     public function detail($id){
@@ -41,29 +45,11 @@ class OrderController extends Controller
             'data' => Order::find($id)
         ]);
     }
-    public function index(Request $request)
-    {
-       
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   
     public function orderFilter(Request $request)
     {
         $check_in = $request->check_in;
         $guest_name = $request->guest_name;
-
-        // $query = Order::query();
-
-        // if($guest_name){
-        //     $query = $query->whereHas('guest_name', function ($query) use ($guest_name){
-        //         $query->where('guest_name', 'like', '%'.$guest_name.'%');
-        //     });
-        // }
-        // $orders = $query->get();
 
         $orders= [];
 
@@ -92,8 +78,6 @@ class OrderController extends Controller
             ->get();
         } 
 
-
-        
         return response()->json(([
             'data' => $orders
         ]));
