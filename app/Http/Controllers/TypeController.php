@@ -32,46 +32,47 @@ class TypeController extends Controller
     }
 
     public function detail($id)
-    {       
+    {
         return response()->json([
             'data' => Type::find($id)
         ]);
     }
 
-    public function detailType($type_id){
+    public function detailType($type_id)
+    {
         $room = Rooms::join('type', 'rooms.type_id', '=', 'type.type_id')
-                ->select('rooms.*', 'type.type_name')
-                ->where('rooms.type_id', $type_id)
-                ->get();
+            ->select('rooms.*', 'type.type_name')
+            ->where('rooms.type_id', $type_id)
+            ->get();
         return $room;
     }
 
     public function store(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'type_name' => 'required',
             'price' => 'required',
             'desc' => 'required',
             'photo' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
         $photo_name = $request->file('photo')->getClientOriginalName();
- 
+
         $photo_path = $request->file('photo')->store('images');
 
         $location = 'images';
 
         $file = $request->file('photo');
         $file->move($location, $photo_name);
-        
+
         Type::create([
             'type_name' => $request->type_name,
             'price' => $request->price,
             'desc' => $request->desc,
-            'photo_name'    =>$photo_name,
-            'photo_path'    =>$photo_path,
+            'photo_name'    => $photo_name,
+            'photo_path'    => $photo_path,
         ]);
         return response()->json([
-            'message' => 'Success!!',
+            'message' => 'Successfully Insert Data!!',
             'data' => Type::all()
         ]);
     }
@@ -101,6 +102,7 @@ class TypeController extends Controller
             // Pindahkan foto baru ke direktori public/images
             $location = 'images';
             $request->file('photo')->move($location, $photo_name);
+            
         } else {
             $photo_name = $type->photo_name;
             $photo_path = $type->photo_path;
@@ -115,7 +117,7 @@ class TypeController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Success Update Data!',
+            'message' => 'Successfully Update Data!',
             'data' => Type::find($id)
         ]);
     }
@@ -123,10 +125,10 @@ class TypeController extends Controller
 
     public function destroy($id)
     {
-        Type::where('type_id',$id)->delete();
+        Type::where('type_id', $id)->delete();
 
         return response()->json([
-            'message' => 'Success Delete Data!',
+            'message' => 'Successfully Delete Data!',
         ]);
     }
 }

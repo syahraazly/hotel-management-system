@@ -132,7 +132,7 @@ class OrdersDetailController extends Controller
             ->join('orders_details', 'orders.order_id', '=', 'orders_details.order_id')
             ->join('rooms', 'orders_details.room_id', '=', 'rooms.room_id')
             ->join('type', 'rooms.type_id', '=', 'type.type_id')
-            ->select('rooms.room_id', 'type.type_name', 'orders.check_in', 'orders.check_out', 'orders.guest_name', 'orders.customer_name')
+            ->select('rooms.room_id', 'type.type_name', 'orders.order_number', 'orders.check_in', 'orders.check_out', 'orders.guest_name', 'orders.customer_name')
             ->where('orders.customer_email', '=', $email)
             ->where('orders.order_number', '=', $order_number)
             ->get()->first();
@@ -142,7 +142,9 @@ class OrdersDetailController extends Controller
 
          
         return response()->json([
-            'error' => 'Failed load data receipt'
+            'error' => 'Failed load data receipt',
+            // 'data' =>  $results,
+            // 'data' => $receiptResponse
         ]);
 
     }
