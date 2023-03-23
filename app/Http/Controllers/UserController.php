@@ -9,10 +9,12 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Contracts\Providers\Auth;
+// use Tymon\JWTAuth\Contracts\Providers\Auth;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Facades\JWTAuth as FacadesJWTAuth;
+
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -34,13 +36,21 @@ class UserController extends Controller
     }
 
     public function logout(Request $request){
-        $this->guard()->logout();
+
+        $user = Auth::guard('api')->user();
+        Auth::guard('api')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        // $request->session()->invalidate();  
         return response([
             'message' => 'success logout'
         ]);      
+        // $this->guard()->logout();
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
+        // // $request->session()->invalidate();  
+        // return response([
+        //     'message' => 'success logout'
+        // ]);      
     }
 
     public function userProfile(){
